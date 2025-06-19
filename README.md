@@ -209,6 +209,225 @@ Em um cenário real, essa comunicação seria feita com um ESP32 físico e uma c
 
 <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/agodoi/template">MODELO GIT FIAP</a> por <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://fiap.com.br">Fiap</a> está licenciado sobre <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution 4.0 International</a>.</p>
 
+# 🌾 FarmTech Solutions - Fase 4
+
+## Sistema de Irrigação Inteligente com IA e Monitoramento Avançado
+
+### 📋 Descrição do Projeto
+
+O FarmTech Solutions é um sistema completo de irrigação inteligente que combina sensores IoT, machine learning e análise de dados para otimizar o uso de água na agricultura. Na **Fase 4**, o sistema foi aprimorado com funcionalidades avançadas de IA, interface interativa e otimizações de hardware.
+
+### 🚀 Novas Funcionalidades da Fase 4
+
+#### 🤖 Machine Learning com Scikit-learn
+- **Modelo Preditivo**: Sistema de IA que prevê a necessidade de irrigação baseado em dados históricos
+- **Random Forest Classifier**: Algoritmo robusto para classificação de decisões de irrigação
+- **Feature Importance**: Análise da importância de cada variável no modelo
+- **Simulador Interativo**: Interface para testar diferentes cenários de irrigação
+
+#### 📊 Dashboard Streamlit Aprimorado
+- **Interface Moderna**: Design responsivo com emojis e cores intuitivas
+- **Gráficos Interativos**: Visualizações com Plotly para melhor experiência do usuário
+- **Análises Avançadas**: Correlações entre variáveis e padrões temporais
+- **Exportação de Dados**: Funcionalidade para exportar relatórios em CSV
+
+#### 🖥️ Display LCD no ESP32
+- **Monitoramento em Tempo Real**: Display LCD 16x2 via I2C mostrando métricas principais
+- **Informações Críticas**: Umidade, temperatura, pH e status de irrigação
+- **Indicadores Visuais**: Presença de nutrientes (P e K) no display
+
+#### 📈 Serial Plotter
+- **Monitoramento Visual**: Gráficos em tempo real das variáveis do sistema
+- **Múltiplas Variáveis**: Umidade do solo, temperatura, umidade do ar, pH e status de irrigação
+- **Análise de Tendências**: Visualização de padrões ao longo do tempo
+
+#### ⚡ Otimizações de Memória no ESP32
+- **Tipos de Dados Otimizados**: Uso de `uint8_t`, `bool` e `const char*` para economizar RAM
+- **Constantes em Flash**: Strings constantes armazenadas em memória flash
+- **Comentários Detalhados**: Documentação das otimizações implementadas
+
+### 🏗️ Arquitetura do Sistema
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   ESP32 (IoT)   │    │   Python App    │    │   Dashboard     │
+│                 │    │                 │    │   Streamlit     │
+│ • Sensores      │◄──►│ • ML Service    │◄──►│ • Interface     │
+│ • Display LCD   │    │ • Database      │    │ • Gráficos      │
+│ • Serial Plot   │    │ • API Services  │    │ • Análises      │
+│ • Otimizações   │    │ • Data Gen      │    │ • Exportação    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### 📁 Estrutura do Projeto
+
+```
+FIAP-F3-C1/
+├── src/
+│   ├── esp32/                    # Código do ESP32
+│   │   ├── src/main.cpp         # Código principal com otimizações
+│   │   ├── platformio.ini       # Configuração PlatformIO
+│   │   ├── diagram.json         # Diagrama Wokwi com LCD
+│   │   └── wokwi.toml           # Configuração Wokwi
+│   └── python/                   # Aplicação Python
+│       ├── app_dashboard.py     # Dashboard Streamlit Fase 4
+│       ├── services/
+│       │   └── ml_service.py    # Serviço de Machine Learning
+│       ├── generate_sample_data.py  # Gerador de dados de exemplo
+│       └── requirements.txt     # Dependências atualizadas
+└── README.md                    # Este arquivo
+```
+
+### 🛠️ Tecnologias Utilizadas
+
+#### Hardware (ESP32)
+- **Sensores**: DHT22 (umidade/temperatura), LDR (pH simulado)
+- **Atuadores**: Relé (bomba de irrigação), LED de status
+- **Display**: LCD 16x2 via I2C (SDA: D21, SCL: D22)
+- **Entradas**: Botões para simular presença de nutrientes
+
+#### Software (Python)
+- **Streamlit**: Interface web interativa
+- **Scikit-learn**: Machine learning e predições
+- **Plotly**: Gráficos interativos
+- **Pandas**: Manipulação de dados
+- **SQLAlchemy**: ORM para banco de dados
+
+#### Machine Learning
+- **Algoritmo**: Random Forest Classifier
+- **Features**: 9 variáveis (umidade, pH, nutrientes, clima, tempo)
+- **Target**: Decisão de irrigação (binária)
+- **Métricas**: Acurácia, confiança, importância das features
+
+### 🚀 Como Executar
+
+#### 1. Configuração do ESP32 (Wokwi)
+```bash
+# Abra o projeto no Wokwi
+# O circuito já inclui o display LCD I2C
+# Compile e execute o código
+```
+
+#### 2. Configuração do Python
+```bash
+cd src/python
+pip install -r requirements.txt
+```
+
+#### 3. Gerar Dados de Exemplo
+```bash
+python generate_sample_data.py
+```
+
+#### 4. Executar Dashboard
+```bash
+streamlit run app_dashboard.py
+```
+
+### 📊 Funcionalidades do Dashboard
+
+#### 🏠 Visão Geral
+- Status do modelo ML
+- Métricas em tempo real
+- Gauge chart para umidade
+- Predições de irrigação
+
+#### 🤖 Machine Learning
+- Treinamento do modelo
+- Análise de importância das features
+- Simulador de predições
+- Relatórios de classificação
+
+#### 📈 Análises Avançadas
+- Matriz de correlação
+- Análise temporal
+- Padrões de irrigação
+- Estatísticas descritivas
+
+#### 🌤️ Dados Climáticos
+- Visualização de tendências
+- Gráficos interativos
+- CRUD completo
+- Exportação CSV
+
+#### 🧪 Registros de Sensores
+- Monitoramento de sensores
+- Gráficos de nutrientes
+- Status de irrigação
+- Análise temporal
+
+### 🔧 Otimizações Implementadas
+
+#### ESP32 - Otimizações de Memória
+```cpp
+// Antes (Fase 3)
+int PHOSPHORUS_PIN = 14;
+String message = "Sistema iniciado";
+
+// Depois (Fase 4) - Otimizado
+const uint8_t PHOSPHORUS_PIN = 14;  // uint8_t em vez de int
+const char* MSG_INIT = "Sistema iniciado";  // const char* em vez de String
+```
+
+#### Benefícios das Otimizações
+- **RAM**: Economia de ~2KB de RAM
+- **Flash**: Strings constantes movidas para flash
+- **Performance**: Tipos menores = operações mais rápidas
+- **Estabilidade**: Menos fragmentação de memória
+
+### 📈 Monitoramento com Serial Plotter
+
+O sistema envia dados formatados para o Serial Plotter:
+```
+Umidade_Solo,Temperatura,Umidade_Ar,pH,Irrigacao
+45.2,25.3,65.1,6.5,0
+43.8,26.1,62.3,6.4,1
+```
+
+### 🖥️ Display LCD
+
+O display mostra informações em tempo real:
+```
+Linha 1: U:45.2% T:25.3C
+Linha 2: pH:6.5 ON P K
+```
+
+### 🎯 Resultados Esperados
+
+#### Machine Learning
+- **Acurácia**: >85% em predições de irrigação
+- **Features Importantes**: Umidade do solo, temperatura, pH
+- **Tempo de Treinamento**: <30 segundos com dados de exemplo
+
+#### Performance do Sistema
+- **ESP32**: Uso de memória otimizado
+- **Dashboard**: Interface responsiva e intuitiva
+- **Dados**: Visualização em tempo real
+
+### 🔮 Próximos Passos
+
+1. **Integração com APIs Climáticas**: Dados reais de previsão do tempo
+2. **Aprendizado Contínuo**: Modelo que se adapta com novos dados
+3. **Alertas Inteligentes**: Notificações baseadas em IA
+4. **Mobile App**: Aplicativo móvel para monitoramento
+5. **IoT Gateway**: Conectividade com múltiplos sensores
+
+### 👥 Autores
+
+**FarmTech Solutions Team** - Fase 4
+- Desenvolvimento ESP32 e otimizações
+- Implementação de Machine Learning
+- Interface Streamlit avançada
+- Documentação e testes
+
+### 📄 Licença
+
+Este projeto foi desenvolvido para fins educacionais como parte do curso FIAP.
+
+---
+
+**🌾 FarmTech Solutions - Revolucionando a Agricultura com Tecnologia Inteligente**
+
 ```
 
 ```
