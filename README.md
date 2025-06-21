@@ -211,7 +211,7 @@ Sistema de irrigação inteligente aprimorado com Machine Learning, interface av
 - **Estabilidade:** Menor fragmentação de memória
 - **Escalabilidade:** Mais espaço para funcionalidades futuras
 
-![Dashboard Inteligente](/assets/dashboard_crud.png)
+![Dashboard Inteligente](/assets/dashboard-ase4.png)
 
 ### 📌 Observações Finais
 
