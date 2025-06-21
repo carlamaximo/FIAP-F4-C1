@@ -1,5 +1,36 @@
 # Sistema de sensores e controle com ESP32
 
+## 🚀 Requisitos Fase 4 - Implementações Avançadas
+
+Esta versão do projeto atende aos requisitos avançados da Fase 4:
+
+### 1. Display LCD 16x2 via I2C
+- O circuito inclui um display LCD 16x2 conectado ao ESP32 via barramento I2C (SDA: GPIO 21, SCL: GPIO 22).
+- O display exibe em tempo real: umidade do solo, temperatura, pH, status da irrigação e presença de nutrientes (P/K).
+- Mensagens de inicialização e status do sistema também são exibidas.
+
+### 2. Monitoramento com Serial Plotter
+- O código envia, a cada ciclo, as principais variáveis (umidade, temperatura, pH, status de irrigação, nutrientes) para o Serial Plotter.
+- Isso permite acompanhar graficamente, em tempo real, o comportamento do sistema e as decisões de irrigação.
+
+### 3. Otimização de Memória no ESP32
+- O código foi revisado para utilizar tipos de dados otimizados (`uint8_t`, `bool`, `const char*`), reduzindo o consumo de RAM.
+- Strings constantes são armazenadas na flash.
+- Comentários no código justificam as escolhas de otimização.
+- Essas práticas garantem maior performance e estabilidade ao firmware.
+
+### 4. Integração Simulada com Dados Climáticos
+- O sistema lê dados climáticos simulados via string JSON (exemplo: `climate_json`), representando o que seria recebido do Python em um cenário real.
+- As decisões de irrigação consideram tanto sensores locais quanto dados externos (temperatura, umidade do ar, previsão de chuva).
+
+### 5. Integração com Sistema Python
+- Em ambiente real, a comunicação seria feita via porta serial (pyserial). No Wokwi, a integração é simulada via JSON embutido no código.
+- O sistema Python é responsável por buscar dados climáticos reais e alimentar o ESP32.
+
+---
+
+# Descrição do Projeto
+
 Este projeto implementa um sistema de irrigação inteligente utilizando a plataforma ESP32, sensores simulados no ambiente Wokwi e integração com o PlatformIO no VSCode.
 
 O objetivo é criar um protótipo funcional capaz de **monitorar variáveis do solo** (umidade, nutrientes e pH) e **acionar a bomba de irrigação** conforme condições previamente estabelecidas, usando tanto dados locais dos sensores quanto informações climáticas externas, simuladas via JSON.
@@ -21,7 +52,7 @@ Portanto, todos os caminhos abaixo consideram como raiz o diretório src/esp32/.
 | :--------------------- | :--------------------------------------------------- |
 | `src/main.cpp`         | Código fonte em C++ para controle de sensores e relé |
 | `diagram.json`         | Definição do circuito no Wokwi                       |
-| `circuito-esp32-wokwi` | Imagem exportada do circuito                         |
+| `circuito-esp32-wokwi-fase-4.png` | Imagem exportada do circuito da fase 4                        |
 | `README.md`            | Documentação do projeto                              |
 
 ## Requisitos do sistema
@@ -63,7 +94,7 @@ pio run
 
 ## Circuito desenvolvido no Wokwi
 
-![Circuito no Wokwi](../../assets/circuito-esp32-wokwi.png)
+![Circuito no Wokwi](../../assets/circuito-esp32-wokwi-fase-4.png)
 
 Legenda dos componentes:
 | Componente | Simulação | GPIO ESP32 | Descrição |
@@ -95,11 +126,11 @@ Essa conversão é baseada na interpolação proporcional, considerando que valo
   - Decide acionar ou desligar a bomba de irrigação conforme a lógica implementada.
   - Atualiza o status do LED vermelho conforme a irrigação ativa ou inativa.
 
-## Video do funcionamento
+## Demonstração do uso do Serial Plotter
 
-Compilação e execução do projeto utilizando PIO e Wokwi
+![Circuito no Wokwi com serial potter](../../assets\circuito-com-serial-plotter-1.jpeg)
 
-[Circuito no Wokwi (vídeo)](../../assets/circuito-esp32-wokwi.mp4)
+![Circuito no Wokwi com serial potter 2](../../assets\circuito-com-serial-plotter-2.jpeg)
 
 ## Lógica de controle da irrigação - Embasamento técnico
 
