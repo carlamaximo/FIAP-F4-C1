@@ -8,12 +8,12 @@
 
 # Nome do projeto
 
-CAP 1 - Um mapa do tesouro
+CAP 1 - Automação e inteligência na FarmTech Solutions
 Sistema de irrigação inteligente com ESP32 e Python
 
 ## Nome do grupo
 
-Grupo 76
+Grupo 73
 
 ## 👨‍🎓 Integrantes:
 
@@ -42,18 +42,46 @@ No ambiente simulado, a parte física foi modelada com o simulador Wokwi, utiliz
 - Sensor LDR simulando pH do solo
 - Sensor DHT22 para umidade
 - Relé e LED controlando a bomba de irrigação
+- **Display LCD 16x2 via I2C** para exibir métricas em tempo real
 
 Já o código Python consome uma API pública de clima, grava os dados em banco de dados relacional, permite análises via dashboard Streamlit, e simula o envio de comandos ao ESP32 via serial (ou via JSON em contexto de simulação).
 
-Além disso, exploramos os conceitos de **IoT, automação agrícola, integração com APIs REST, banco de dados, POO, testes e dashboards interativos**, reforçando a aplicação prática de conteúdos aprendidos.
+Além disso, exploramos os conceitos de **IoT, automação agrícola, integração com APIs REST, banco de dados, POO, testes, dashboards interativos e Machine Learning**, reforçando a aplicação prática de conteúdos aprendidos.
 
 Diagrama DAP - Funcionamento da Solução
 ![DAP da aplicação](assets/DAP.png)
 
+## 📌 Requisitos do Projeto (Fase 4)
+
+### 1. Incorporar Scikit-learn
+- Utilização da biblioteca Scikit-learn para criar um modelo preditivo (RandomForestClassifier) que, com base nos dados coletados (umidade, pH, nutrientes, temperatura, clima, hora, mês), sugere ações futuras de irrigação.
+- O modelo é treinado com dados históricos e pode ser testado via simulador interativo no dashboard.
+- Insights como importância das features e métricas de acurácia são exibidos na interface.
+
+### 2. Implementar Streamlit
+- Dashboard interativo desenvolvido com Streamlit, permitindo visualização em tempo real dos dados do sistema de irrigação.
+- Gráficos dinâmicos (umidade do solo, níveis de nutrientes, predições do modelo de ML) utilizando Plotly.
+- Interface intuitiva, com múltiplas abas, exportação de dados e simulador de predição.
+
+### 3. Adicionar display LCD no Wokwi
+- Display LCD 16x2 conectado ao ESP32 via barramento I2C (pinos SDA e SCL).
+- Exibe as principais métricas em tempo real: umidade, temperatura, pH, status da irrigação e presença de nutrientes.
+- Informações críticas são mostradas diretamente no sistema físico simulado.
+
+### 4. Monitoramento com Serial Plotter
+- Implementação do Serial Plotter para monitorar variáveis do projeto (umidade, temperatura, pH, status de irrigação, etc).
+- O gráfico do Serial Plotter apresenta as mudanças em tempo real, facilitando a análise visual do comportamento do sistema.
+- Dados são enviados a cada ciclo de leitura para visualização contínua.
+
+### 5. Otimização de Memória no ESP32
+- Revisão e otimização do uso das variáveis no código C++ do ESP32.
+- Utilização de tipos de dados otimizados (`uint8_t`, `bool`, `const char*`), conversão de `float` para inteiros quando possível, e armazenamento de strings na flash.
+- Comentários no código justificando as escolhas de otimização.
+- Resultados: economia de RAM, maior performance e estabilidade.
+
 ## 📁 Estrutura de pastas
 
 Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
-
 ```
 src/
 ├── esp32/ # Projeto do microcontrolador ESP32 (PlatformIO + C++)
@@ -72,7 +100,7 @@ Para mais detalhes sobre cada parte, consulte os READMEs específicos:
 
 ### Entrega 1 - Sistema de Sensores e Controle com ESP32
 
-Implementação do sistema físico simulado no Wokwi com lógica em C++. Inclui sensores de umidade (DHT22), pH (LDR), fósforo e potássio (botões), e controle do relé para ativar a bomba de irrigação.
+Implementação do sistema físico simulado no Wokwi com lógica em C++. Inclui sensores de umidade (DHT22), pH (LDR), fósforo e potássio (botões), controle do relé para ativar a bomba de irrigação e display LCD para exibição das métricas.
 
 - **Pasta de desenvolvimento**: src/esp32
 - **Documentação Específica**: [📘 README do projeto ESP32](src/esp32/README.md)
@@ -82,6 +110,7 @@ Implementação do sistema físico simulado no Wokwi com lógica em C++. Inclui 
   - Construir o circuito no Wokwi
   - Desenvolver código em C++
   - Documentar toda a lógica de controle
+  - Exibir métricas no display LCD
 
 - **Entregáveis**:
 
@@ -103,7 +132,7 @@ Sistema completo de armazenamento, processamento e visualização de dados dos s
 
   - Criar scripts para armazenamento em SQL
   - Implementar CRUD completo
-  - Justificar estrutura de dados e relacionar com o MER da fase anterio
+  - Justificar estrutura de dados e relacionar com o MER da fase anterior
 
 - **Entregáveis**:
 
@@ -121,8 +150,7 @@ Painel visual com gráficos interativos para análise dos dados dos sensores. In
 
 - **Metas**:
 
-  -Criar visualizações claras e intuitivas para dados coletados
-
+  - Criar visualizações claras e intuitivas para dados coletados
   - Permitir filtros e exportações
 
 - **Entregáveis**:
@@ -140,8 +168,7 @@ Integração com a API da OpenWeather para dados climáticos em tempo real, perm
 
 - **Metas**:
 
-  -Criar integração robusta com API
-
+  - Criar integração robusta com API
   - Implementar lógica condicional para irrigação
   - Armazenar dados meteorológicos no banco
 
@@ -151,6 +178,41 @@ Integração com a API da OpenWeather para dados climáticos em tempo real, perm
   - Tabelas populadas com dados climáticos
   - Documentação detalhada
 
+### 🚀 Fase 4 - Sistema Inteligente com IA e Monitoramento Avançado
+
+**STATUS: ✅ COMPLETAMENTE IMPLEMENTADO**
+
+Sistema de irrigação inteligente aprimorado com Machine Learning, interface avançada, display LCD, monitoramento via Serial Plotter e otimizações de memória. Todos os requisitos foram implementados com sucesso.
+
+- **Pasta de desenvolvimento**: src/python e src/esp32
+- **Documentação Específica**: [📘 README do projeto ESP32](src/esp32/README.md)
+
+#### ✅ Resumo dos Requisitos Implementados:
+
+- **Machine Learning com Scikit-learn**: Modelo RandomForestClassifier, predição de irrigação baseada em dados históricos, análise de importância das variáveis, simulador interativo no dashboard.
+- **Dashboard Streamlit**: Interface moderna, gráficos em tempo real, múltiplas abas, exportação de dados, simulador de predição.
+- **Display LCD no Wokwi**: Exibição de métricas em tempo real diretamente no hardware simulado.
+- **Serial Plotter**: Monitoramento visual das variáveis do sistema em tempo real.
+- **Otimização de Memória no ESP32**: Tipos de dados otimizados, strings na flash, comentários justificando as escolhas, economia de RAM e maior performance.
+
+#### 🎯 Funcionalidades Avançadas:
+
+- **Machine Learning:** Modelo treinável com dados históricos
+- **Predições Inteligentes:** Sugestões de irrigação baseadas em IA
+- **Interface Moderna:** Dashboard responsivo com métricas em tempo real
+- **Monitoramento Físico:** Display LCD com informações críticas
+- **Análise Visual:** Serial Plotter para acompanhamento contínuo
+- **Código Otimizado:** Eficiência de memória e performance
+
+#### 📊 Impacto das Otimizações:
+
+- **RAM:** 211+ bytes economizados
+- **Performance:** Operações mais rápidas com inteiros
+- **Estabilidade:** Menor fragmentação de memória
+- **Escalabilidade:** Mais espaço para funcionalidades futuras
+
+![Dashboard Inteligente](/assets/dashboard_crud.png)
+
 ### 📌 Observações Finais
 
 Como este projeto foi desenvolvido em um ambiente 100% simulado, não é possível estabelecer comunicação direta entre ESP32 e Python por porta serial. Para isso, utilizamos um arquivo climate.json como ponte de simulação dos dados meteorológicos.
@@ -158,6 +220,16 @@ Como este projeto foi desenvolvido em um ambiente 100% simulado, não é possív
 Em um cenário real, essa comunicação seria feita com um ESP32 físico e uma conexão serial real utilizando pyserial.
 
 ## 🗃 Histórico de lançamentos
+
+- **0.5.0 - 20/12/2024** 🚀
+  - **Fase 4 - Sistema Inteligente COMPLETO**
+  - ✅ Scikit-learn implementado com modelo de predição
+  - ✅ Dashboard Streamlit avançado com IA
+  - ✅ Display LCD I2C no Wokwi
+  - ✅ Monitoramento com Serial Plotter
+  - ✅ Otimizações de memória no ESP32 (211+ bytes economizados)
+  - Documentação completa das otimizações
+  - Sistema 100% funcional e otimizado
 
 - 0.4.0 - 18/05/2025
   - Ajustes na documentação, incluindo imagens e vídeos.
@@ -261,7 +333,7 @@ O FarmTech Solutions é um sistema completo de irrigação inteligente que combi
 ### 📁 Estrutura do Projeto
 
 ```
-FIAP-F3-C1/
+FIAP-F4-C1/
 ├── src/
 │   ├── esp32/                    # Código do ESP32
 │   │   ├── src/main.cpp         # Código principal com otimizações
@@ -271,10 +343,43 @@ FIAP-F3-C1/
 │   └── python/                   # Aplicação Python
 │       ├── app_dashboard.py     # Dashboard Streamlit Fase 4
 │       ├── services/
-│       │   └── ml_service.py    # Serviço de Machine Learning
-│       ├── generate_sample_data.py  # Gerador de dados de exemplo
-│       └── requirements.txt     # Dependências atualizadas
-└── README.md                    # Este arquivo
+│       │   ├── ml_service.py    # Serviço de Machine Learning
+│       │   ├── weather_service.py      # Serviço de comunicação de dados via Serial
+│       │   ├── sensor_service.py       # Serviço de processamento de registros de sensores
+│       │   ├── producer_service.py     # Serviço de processamento de produtores
+│       │   ├── crops_service.py        # Serviço de controle de colheita
+│       │   ├── component_service.py    # Serviço de gerenciamento de produtores
+│       │   ├── climate_service.py      # Serviço de gerenciamento de dados da API OpenWeather
+│       │   └── application_service.py  # Serviço de gerenciamento de aplicações
+│       ├── database/                   # Camada de acesso a dados
+│       │   ├── __init__.py
+│       │   ├── models.py               # Definição dos modelos SQLAlchemy
+│       │   ├── oracle.py                # Configuração da conexão Oracle
+│       │   ├── setup.py                # Script de inicialização do banco
+│       │   ├── utils.py                # Script para geração do DDL e MER
+│       │   └── repositories/           # Implementação dos repositórios
+│       │       ├── __init__.py
+│       │       ├── application_repository.py
+│       │       ├── climate_data_repository.py
+│       │       ├── component_repository.py
+│       │       ├── crop_repository.py
+│       │       ├── producer_repository.py
+│       │       └── sensor_record.py
+│       ├── tests/                      # Testes automatizados
+│       │   ├── __init__.py
+│       │   ├── conftest.py             # Configurações dos testes
+│       │   ├── test_models.py          # Testes dos modelos
+│       │   └── test_repositories.py    # Testes dos repositórios
+│       ├── logs/                       # Logs do sistema
+│       ├── generate_sample_data.py     # Gerador de dados de exemplo
+│       ├── requirements.txt            # Dependências atualizadas
+│       ├── .env                        # Variáveis de ambiente
+│       ├── .gitignore                  # Arquivos ignorados pelo git
+│       ├── main.py                     # Ponto de entrada da aplicação
+│       └── pytest.ini                  # Configuração do pytest
+├── assets/                            # Imagens, gráficos e materiais estáticos
+├── document/                          # Documentos acadêmicos e relatórios
+└── README.md                          # Este arquivo
 ```
 
 ### 🛠️ Tecnologias Utilizadas
@@ -430,3 +535,4 @@ Este projeto foi desenvolvido para fins educacionais como parte do curso FIAP.
 ```
 
 ```
+
