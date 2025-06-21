@@ -508,13 +508,8 @@ Linha 2: pH:6.5 ON P K
 - **Dashboard**: Interface responsiva e intuitiva
 - **Dados**: Visualização em tempo real
 
-### 🔮 Próximos Passos
-
-1. **Integração com APIs Climáticas**: Dados reais de previsão do tempo
-2. **Aprendizado Contínuo**: Modelo que se adapta com novos dados
-3. **Alertas Inteligentes**: Notificações baseadas em IA
-4. **Mobile App**: Aplicativo móvel para monitoramento
-5. **IoT Gateway**: Conectividade com múltiplos sensores
+### 🔮 Vídeo no YouTube da demonstração do projeto
+https://www.youtube.com/watch?v=Y4Qljdxucm4
 
 ### 👥 Autores
 
