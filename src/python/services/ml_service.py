@@ -31,65 +31,141 @@ class MLService:
         df_climate = pd.DataFrame(climate_data)
         
         if df_sensors.empty or df_climate.empty:
+            print("❌ Dados vazios detectados")
             return None
+        
+        print(f"📊 Preparando dados: {len(df_sensors)} sensores, {len(df_climate)} clima")
         
         # Converter timestamps
         df_sensors['timestamp'] = pd.to_datetime(df_sensors['timestamp'])
         df_climate['timestamp'] = pd.to_datetime(df_climate['timestamp'])
         
         # Mesclar dados por timestamp (aproximação de 1 hora)
-        df_sensors['timestamp_hour'] = df_sensors['timestamp'].dt.floor('H')
-        df_climate['timestamp_hour'] = df_climate['timestamp'].dt.floor('H')
+        df_sensors['timestamp_hour'] = df_sensors['timestamp'].dt.floor('h')  # Corrigido: 'H' -> 'h'
+        df_climate['timestamp_hour'] = df_climate['timestamp'].dt.floor('h')  # Corrigido: 'H' -> 'h'
+        
+        print(f"🕐 Timestamps únicos - Sensores: {df_sensors['timestamp_hour'].nunique()}, Clima: {df_climate['timestamp_hour'].nunique()}")
         
         merged_df = pd.merge(df_sensors, df_climate, 
                            left_on='timestamp_hour', 
                            right_on='timestamp_hour', 
                            how='inner', suffixes=('_sensor', '_climate'))
         
+        print(f"🔄 Registros combinados: {len(merged_df)}")
+        
         if merged_df.empty:
-            return None
+            print("❌ Nenhum registro combinado encontrado")
+            # Tentar combinação mais flexível
+            return self._prepare_data_flexible(df_sensors, df_climate)
         
         # Criar features
         features = []
         for _, row in merged_df.iterrows():
-            feature_vector = [
-                row['soil_moisture'],           # Umidade do solo
-                row['soil_ph'],                 # pH do solo
-                float(row['phosphorus_present']), # Fósforo (0 ou 1)
-                float(row['potassium_present']),  # Potássio (0 ou 1)
-                row['temperature'],             # Temperatura
-                row['air_humidity'],            # Umidade do ar
-                float(row['rain_forecast']),    # Previsão de chuva (0 ou 1)
-                row['timestamp_sensor'].hour,   # Hora do dia
-                row['timestamp_sensor'].month   # Mês
-            ]
-            features.append(feature_vector)
+            try:
+                feature_vector = [
+                    row['soil_moisture'],           # Umidade do solo
+                    row['soil_ph'],                 # pH do solo
+                    float(row['phosphorus_present']), # Fósforo (0 ou 1)
+                    float(row['potassium_present']),  # Potássio (0 ou 1)
+                    row['temperature'],             # Temperatura
+                    row['air_humidity'],            # Umidade do ar
+                    float(row['rain_forecast']),    # Previsão de chuva (0 ou 1)
+                    row['timestamp_sensor'].hour,   # Hora do dia
+                    row['timestamp_sensor'].month   # Mês
+                ]
+                features.append(feature_vector)
+            except Exception as e:
+                print(f"⚠️ Erro ao processar linha: {e}")
+                continue
+        
+        if len(features) < 10:
+            print(f"❌ Poucos features válidos: {len(features)}")
+            return self._prepare_data_flexible(df_sensors, df_climate)
         
         # Criar target (decisão de irrigação baseada na lógica atual)
         targets = []
         for _, row in merged_df.iterrows():
-            # Aplicar a mesma lógica do ESP32
-            irrigate = False
-            
-            if not row['rain_forecast']:
-                if row['soil_moisture'] < 40 and row['phosphorus_present']:
-                    irrigate = True
+            try:
+                # Aplicar a mesma lógica do ESP32
+                irrigate = False
                 
-                if row['potassium_present'] and row['soil_moisture'] > 60:
-                    irrigate = False
+                if not row['rain_forecast']:
+                    if row['soil_moisture'] < 40 and row['phosphorus_present']:
+                        irrigate = True
+                    
+                    if row['potassium_present'] and row['soil_moisture'] > 60:
+                        irrigate = False
+                    
+                    if row['soil_moisture'] < 40 and (row['soil_ph'] < 5.5 or row['soil_ph'] > 7.0):
+                        irrigate = False
+                    
+                    if row['soil_moisture'] > 70:
+                        irrigate = False
+                    
+                    if (not row['phosphorus_present'] or not row['potassium_present']) and \
+                       (row['soil_moisture'] >= 30 and row['soil_moisture'] <= 50):
+                        irrigate = True
                 
-                if row['soil_moisture'] < 40 and (row['soil_ph'] < 5.5 or row['soil_ph'] > 7.0):
-                    irrigate = False
-                
-                if row['soil_moisture'] > 70:
-                    irrigate = False
-                
-                if (not row['phosphorus_present'] or not row['potassium_present']) and \
-                   (row['soil_moisture'] >= 30 and row['soil_moisture'] <= 50):
-                    irrigate = True
-            
-            targets.append(1 if irrigate else 0)
+                targets.append(1 if irrigate else 0)
+            except Exception as e:
+                print(f"⚠️ Erro ao processar target: {e}")
+                targets.append(0)
         
+        print(f"✅ Features criados: {len(features)}, Targets: {len(targets)}")
+        return np.array(features), np.array(targets)
+    
+    def _prepare_data_flexible(self, df_sensors, df_climate):
+        """
+        Método alternativo para combinar dados quando timestamps não coincidem
+        """
+        print("🔄 Usando método flexível de combinação...")
+        
+        # Pegar os primeiros registros de cada tipo
+        min_records = min(len(df_sensors), len(df_climate), 50)
+        
+        features = []
+        targets = []
+        
+        for i in range(min_records):
+            try:
+                sensor_row = df_sensors.iloc[i]
+                climate_row = df_climate.iloc[i]
+                
+                feature_vector = [
+                    sensor_row['soil_moisture'],
+                    sensor_row['soil_ph'],
+                    float(sensor_row['phosphorus_present']),
+                    float(sensor_row['potassium_present']),
+                    climate_row['temperature'],
+                    climate_row['air_humidity'],
+                    float(climate_row['rain_forecast']),
+                    sensor_row['timestamp'].hour,
+                    sensor_row['timestamp'].month
+                ]
+                features.append(feature_vector)
+                
+                # Lógica de irrigação
+                irrigate = False
+                if not climate_row['rain_forecast']:
+                    if sensor_row['soil_moisture'] < 40 and sensor_row['phosphorus_present']:
+                        irrigate = True
+                    if sensor_row['potassium_present'] and sensor_row['soil_moisture'] > 60:
+                        irrigate = False
+                    if sensor_row['soil_moisture'] < 40 and (sensor_row['soil_ph'] < 5.5 or sensor_row['soil_ph'] > 7.0):
+                        irrigate = False
+                    if sensor_row['soil_moisture'] > 70:
+                        irrigate = False
+                    if (not sensor_row['phosphorus_present'] or not sensor_row['potassium_present']) and \
+                       (sensor_row['soil_moisture'] >= 30 and sensor_row['soil_moisture'] <= 50):
+                        irrigate = True
+                
+                targets.append(1 if irrigate else 0)
+                
+            except Exception as e:
+                print(f"⚠️ Erro no método flexível: {e}")
+                continue
+        
+        print(f"✅ Método flexível: {len(features)} features criados")
         return np.array(features), np.array(targets)
     
     def train_model(self, sensor_data, climate_data):
@@ -100,7 +176,9 @@ class MLService:
         X, y = self.prepare_data(sensor_data, climate_data)
         
         if X is None or len(X) < 10:
-            return {"success": False, "message": "Dados insuficientes para treinamento (mínimo 10 registros)"}
+            return {"success": False, "message": f"Dados insuficientes para treinamento (mínimo 10 registros, obtidos: {len(X) if X is not None else 0})"}
+        
+        print(f"🎯 Treinando modelo com {len(X)} amostras...")
         
         # Dividir dados em treino e teste
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

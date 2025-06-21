@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from database.oracle import get_session
 from services.climate_service import ClimateService
 from services.sensor_service import SensorRecordService
+from services.component_service import ComponentService
 
 def generate_sample_data():
     """
@@ -17,9 +18,29 @@ def generate_sample_data():
     session = get_session()
     climate_service = ClimateService(session)
     sensor_service = SensorRecordService(session)
+    component_service = ComponentService(session)
     
     print("🌾 Gerando dados de exemplo para FarmTech Solutions - Fase 4")
     print("=" * 60)
+    
+    # Criar um sensor de exemplo se não existir
+    print("🔧 Criando sensor de exemplo...")
+    existing_sensors = component_service.list_components()
+    sensor_id = None
+    
+    if existing_sensors:
+        sensor_id = existing_sensors[0]['id']
+        print(f"✅ Usando sensor existente: {sensor_id}")
+    else:
+        # Criar novo sensor
+        sensor_data = {
+            "name": "Sensor Principal",
+            "type": "Sensor",
+            "crop_id": None
+        }
+        new_sensor = component_service.create_component(sensor_data)
+        sensor_id = new_sensor['id']
+        print(f"✅ Sensor criado: {sensor_id}")
     
     # Limpar dados existentes (opcional)
     print("🗑️ Limpando dados existentes...")
@@ -109,6 +130,7 @@ def generate_sample_data():
             
             # Criar registro de sensor
             sensor_data = {
+                "sensor_id": sensor_id,  # Adicionar sensor_id
                 "soil_moisture": round(soil_moisture, 1),
                 "soil_ph": round(soil_ph, 1),
                 "phosphorus_present": phosphorus_present,
