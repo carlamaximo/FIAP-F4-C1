@@ -13,13 +13,12 @@ Sistema de irrigação inteligente com ESP32 e Python
 
 ## Nome do grupo
 
-Grupo 73
+Grupo 76
 
 ## 👨‍🎓 Integrantes:
 
 - <a href="https://www.linkedin.com/in/anacornachi/">Ana Cornachi</a>
 - <a href="https://www.linkedin.com/in/carlamaximo/">Carla Máximo</a>
-- <a href="https://www.linkedin.com/in/lucas-lins-lima/">Lucas Lins</a>
 
 ## 👩‍🏫 Professores:
 
