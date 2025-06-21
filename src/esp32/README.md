@@ -52,7 +52,8 @@ Portanto, todos os caminhos abaixo consideram como raiz o diretório src/esp32/.
 | :--------------------- | :--------------------------------------------------- |
 | `src/main.cpp`         | Código fonte em C++ para controle de sensores e relé |
 | `diagram.json`         | Definição do circuito no Wokwi                       |
-| `circuito-esp32-wokwi-fase-4.png` | Imagem exportada do circuito da fase 4                        |
+| `circuito-com-serial-plotter-1.jpeg` | Imagem exportada do circuito da fase 4 |
+| `circuito-com-serial-plotter-2.jpeg` | Imagem exportada do circuito da fase 4 |
 | `README.md`            | Documentação do projeto                              |
 
 ## Requisitos do sistema
@@ -128,9 +129,9 @@ Essa conversão é baseada na interpolação proporcional, considerando que valo
 
 ## Demonstração do uso do Serial Plotter
 
-![Circuito no Wokwi com serial potter](../../assets\circuito-com-serial-plotter-1.jpeg)
+![Circuito no Wokwi com serial potter](../../assets/circuito-com-serial-plotter-1.jpeg)
 
-![Circuito no Wokwi com serial potter 2](../../assets\circuito-com-serial-plotter-2.jpeg)
+![Circuito no Wokwi com serial potter 2](../../assets/circuito-com-serial-plotter-2.jpeg)
 
 ## Lógica de controle da irrigação - Embasamento técnico
 
