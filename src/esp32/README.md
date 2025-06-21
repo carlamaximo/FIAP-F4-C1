@@ -128,9 +128,9 @@ Essa conversão é baseada na interpolação proporcional, considerando que valo
 
 ## Demonstração do uso do Serial Plotter
 
-![Circuito no Wokwi com serial potter](../../assets\circuito-com-serial-plotter-1.jpeg)
+![Circuito no Wokwi com serial potter](../../assets/circuito-com-serial-plotter-1.jpeg)
 
-![Circuito no Wokwi com serial potter 2](../../assets\circuito-com-serial-plotter-2.jpeg)
+![Circuito no Wokwi com serial potter 2](../../assets/circuito-com-serial-plotter-2.jpeg)
 
 ## Lógica de controle da irrigação - Embasamento técnico
 
